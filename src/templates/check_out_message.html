@@ -2,17 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Utcheckning</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Utcheckning Bekräftelse</title>
     <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
         body {
             background-image: url('{{ url_for('static', filename='ice_skater.png') }}');
             background-size: cover;
             background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+        p {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Du är nu utcheckad</h1>
+    <div class="container">
+        <h1>Du är nu utcheckad</h1>
+        <p>Välkommen tillbaka!</p>
+        <div class="message">Tack för ditt besök</div>
+    </div>
 </body>
 </html>
