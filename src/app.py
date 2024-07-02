@@ -31,6 +31,8 @@ def check_in():
             db.session.add(child)
         else:
             child.checked_in = True
+            child.first_name = first_name  # Update to capitalized version
+            child.last_name = last_name    # Update to capitalized version
         check_in_out = CheckInOut(child=child, action='in', timestamp=datetime.datetime.now())
         db.session.add(check_in_out)
         db.session.commit()
@@ -39,22 +41,23 @@ def check_in():
         resp.set_cookie('first_name', first_name)
         resp.set_cookie('last_name', last_name)
         return resp
-    first_name = request.cookies.get('first_name', '')
-    last_name = request.cookies.get('last_name', '')
+    first_name = capitalize_name(request.cookies.get('first_name', ''))
+    last_name = capitalize_name(request.cookies.get('last_name', ''))
     return render_template('check_in.html', form=form, first_name=first_name, last_name=last_name)
+
 
 @app.route('/check-out', methods=['GET', 'POST'])
 def check_out():
-    first_name = request.cookies.get('first_name', '')
-    last_name = request.cookies.get('last_name', '')
+    first_name = capitalize_name(request.cookies.get('first_name', '').strip())
+    last_name = capitalize_name(request.cookies.get('last_name', '').strip())
     if first_name and last_name:
-        first_name = capitalize_name(first_name.strip())
-        last_name = capitalize_name(last_name.strip())
         child = Child.query.filter(db.func.lower(Child.first_name) == first_name.lower(),
                                    db.func.lower(Child.last_name) == last_name.lower()).first()
         if child:
             if child.checked_in:
                 child.checked_in = False
+                child.first_name = first_name  # Update to capitalized version
+                child.last_name = last_name    # Update to capitalized version
                 check_in_out = CheckInOut(child=child, action='out', timestamp=datetime.datetime.now())
                 db.session.add(check_in_out)
                 db.session.commit()
@@ -79,6 +82,8 @@ def check_out_form():
                                    db.func.lower(Child.last_name) == last_name.lower()).first()
         if child and child.checked_in:
             child.checked_in = False
+            child.first_name = first_name  # Update to capitalized version
+            child.last_name = last_name    # Update to capitalized version
             check_in_out = CheckInOut(child=child, action='out', timestamp=datetime.datetime.now())
             db.session.add(check_in_out)
             db.session.commit()
@@ -87,8 +92,8 @@ def check_out_form():
             resp.set_cookie('first_name', first_name)
             resp.set_cookie('last_name', last_name)
             return resp
-    first_name = request.cookies.get('first_name', '')
-    last_name = request.cookies.get('last_name', '')
+    first_name = capitalize_name(request.cookies.get('first_name', ''))
+    last_name = capitalize_name(request.cookies.get('last_name', ''))
     return render_template('check_out.html', form=form, first_name=first_name, last_name=last_name)
 
 @app.route('/check-out-message')

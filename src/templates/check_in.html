@@ -87,6 +87,12 @@
             border-radius: 5px;
             text-align: center;
         }
+        .logo {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 100px;
+        }
     </style>
 </head>
 <body>
@@ -114,5 +120,6 @@
             <button type="submit">{{ form.submit.label }}</button>
         </form>
     </div>
+    <img src="{{ url_for('static', filename='logo_small.png') }}" class="logo" alt="Logo">
 </body>
 </html>

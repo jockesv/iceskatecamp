@@ -48,6 +48,12 @@
             font-size: 18px;
             font-weight: bold;
         }
+        .logo {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 100px;
+        }
     </style>
 </head>
 <body>
@@ -56,5 +62,6 @@
         <p>Välkommen tillbaka!</p>
         <div class="message">Tack för ditt besök</div>
     </div>
+    <img src="{{ url_for('static', filename='logo_small.png') }}" class="logo" alt="Logo">
 </body>
 </html>
