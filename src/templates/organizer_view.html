@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Organisatörsvy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</head>
+<body>
+    <h1>Organisatörsvy</h1>
+    <table id="children-table">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Namn</th>
+                <th onclick="sortTable(1)">Status</th>
+                <th>Åtgärder</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for child in children %}
+                <tr>
+                    <td onclick="window.location.href='{{ url_for('history_view', child_id=child.id) }}'">{{ child.first_name }} {{ child.last_name }}</td>
+                    <td>
+                        {% if child.checked_in %}
+                            <span class="status-green"></span> Incheckad
+                        {% else %}
+                            <span class="status-red"></span> Utcheckad
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('toggle_check', child_id=child.id) }}" method="post" style="display:inline;">
+                            {% if child.checked_in %}
+                                <button type="submit">Checka ut</button>
+                            {% else %}
+                                <button type="submit">Checka in</button>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

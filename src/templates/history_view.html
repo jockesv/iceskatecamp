@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ child.first_name }} {{ child.last_name }} - History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>{{ child.first_name }} {{ child.last_name }} - Check In/Out History</h1>
+    <button onclick="window.location.href='{{ url_for('organizer_view') }}'">Back</button>
+    <table id="history-table">
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in history %}
+                <tr>
+                    <td>{{ 'Checked In' if entry.action == 'in' else 'Checked Out' }}</td>
+                    <td>{{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
