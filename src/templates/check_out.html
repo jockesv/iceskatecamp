@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Utcheckning</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
         body {
             background-image: url('{{ url_for('static', filename='ice_skater.png') }}');
@@ -14,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            font-family: Arial, sans-serif;
         }
         .container {
             background: rgba(255, 255, 255, 0.2);
@@ -22,38 +22,64 @@
             backdrop-filter: blur(10px);
             padding: 20px;
             width: 90%;
-            max-width: 400px;
+            max-width: 800px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 90%; /* Adjust the container width to 90% for smaller screens */
+                padding: 30px; /* Increase padding for better appearance */
+            }
         }
         .container h1 {
             margin-bottom: 20px;
             color: #fff;
+            font-size: 2.5em; /* Increase the font size */
         }
-        .container label {
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-group {
+            width: 95%;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
             display: block;
             margin-bottom: 5px;
             color: #fff;
+            font-size: 1.8em; /* Increase the font size */
         }
-        .container input {
-            display: block;
+        .form-group input {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 10px;
             border: none;
             border-radius: 5px;
             outline: none;
             background: rgba(255, 255, 255, 0.5);
+            font-size: 1.8em; /* Increase the font size */
         }
-        .container button {
-            padding: 10px 20px;
+        button {
+            padding: 20px;
             border: none;
             border-radius: 5px;
             background-color: #007BFF;
             color: #FFF;
             cursor: pointer;
-            width: 100%;
+            width: 40%;
+            max-width: 600px; /* Ensure the button takes up 100% of the container */
+            margin-top: 15px; /* Add margin to separate from input fields */
+            font-size: 1.8em; /* Increase the font size */
         }
-        .container button:hover {
+        button:hover {
             background-color: #0056b3;
         }
         .flashes {
@@ -86,10 +112,14 @@
         {% endwith %}
         <form method="post">
             {{ form.hidden_tag() }}
-            <label for="first_name">Förnamn</label>
-            <input type="text" id="first_name" name="first_name" value="{{ first_name }}">
-            <label for="last_name">Efternamn</label>
-            <input type="text" id="last_name" name="last_name" value="{{ last_name }}">
+            <div class="form-group">
+                <label for="first_name">Förnamn</label>
+                <input type="text" id="first_name" name="first_name" value="{{ first_name }}">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Efternamn</label>
+                <input type="text" id="last_name" name="last_name" value="{{ last_name }}">
+            </div>
             <button type="submit">{{ form.submit.label }}</button>
         </form>
     </div>
