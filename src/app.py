@@ -3,6 +3,11 @@ from models import db, Child, CheckInOut
 from forms import CheckInForm, CheckOutForm, LoginForm
 from utils import check_logged_in
 import datetime
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -103,13 +108,21 @@ def check_out_message():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    admin_username = os.getenv('ADMIN_USERNAME')
+    admin_password = os.getenv('ADMIN_PASSWORD')
     if form.validate_on_submit():
-        if form.username.data == 'admin' and form.password.data == 'password':  # simple authentication
+        if form.username.data == admin_username and form.password.data == admin_password:  # simple authentication
             session['logged_in'] = True
             return redirect(url_for('organizer_view'))
         else:
             flash('Ogiltiga uppgifter')
     return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('Du har loggats ut')
+    return redirect(url_for('login'))
 
 @app.route('/organizer', methods=['GET'])
 @check_logged_in
