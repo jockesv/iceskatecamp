@@ -44,18 +44,16 @@
             font-weight: bold;
             color: #333;
         }
-        .status-green, .status-red {
+        .status-icon {
             display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
+            font-size: 16px;
             margin-right: 5px;
         }
         .status-green {
-            background-color: #4CAF50;
+            color: #4CAF50;
         }
         .status-red {
-            background-color: #F44336;
+            color: #F44336;
         }
         button {
             background-color: #007AFF;
@@ -142,9 +140,9 @@
                         </td>
                         <td>
                             {% if child.checked_in %}
-                                <span class="status-green"></span> Incheckad
+                                <i class="fas fa-check-circle status-icon status-green"></i>
                             {% else %}
-                                <span class="status-red"></span> Utcheckad
+                                <i class="fas fa-times-circle status-icon status-red"></i>
                             {% endif %}
                         </td>
                         <td>
