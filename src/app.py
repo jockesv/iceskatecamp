@@ -139,5 +139,14 @@ def toggle_check(child_id):
     db.session.commit()
     return redirect(url_for('organizer_view'))
 
+@app.route('/remove-user/<int:child_id>', methods=['GET'])
+@check_logged_in
+def remove_user(child_id):
+    child = Child.query.get_or_404(child_id)
+    db.session.delete(child)
+    db.session.commit()
+    flash(f'{child.first_name} {child.last_name} har tagits bort från systemet.')
+    return redirect(url_for('organizer_view'))
+
 if __name__ == '__main__':
     app.run(debug=True)

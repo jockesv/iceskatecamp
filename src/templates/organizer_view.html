@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Organisatörsvy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -77,8 +78,50 @@
                 font-size: 12px;
             }
         }
+        .context-menu-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #007AFF;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .context-menu {
+            display: none;
+            position: fixed;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .context-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .context-menu button:active {
+            background-color: #f0f0f0;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
     </style>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </head>
 <body>
     <div class="container">
@@ -105,18 +148,111 @@
                             {% endif %}
                         </td>
                         <td>
-                            <form action="{{ url_for('toggle_check', child_id=child.id) }}" method="post">
-                                {% if child.checked_in %}
-                                    <button type="submit">Checka ut</button>
-                                {% else %}
-                                    <button type="submit">Checka in</button>
-                                {% endif %}
-                            </form>
+                            <button class="context-menu-button" onclick="showContextMenu(event, {{ child.id }}, {{ child.checked_in|tojson }})">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <div id="overlay" class="overlay"></div>
+    <div id="contextMenu" class="context-menu">
+        <button id="toggleCheckButton"></button>
+        <button id="removeUserButton">Ta bort användare</button>
+    </div>
+
+    <script>
+        let currentChildId = null;
+
+        function showContextMenu(event, childId, isCheckedIn) {
+            event.stopPropagation();
+            currentChildId = childId;
+            const contextMenu = document.getElementById('contextMenu');
+            const toggleCheckButton = document.getElementById('toggleCheckButton');
+            const overlay = document.getElementById('overlay');
+
+            toggleCheckButton.textContent = isCheckedIn ? 'Checka ut' : 'Checka in';
+            toggleCheckButton.onclick = () => toggleCheck(childId);
+
+            contextMenu.style.display = 'block';
+            overlay.style.display = 'block';
+
+            const rect = event.target.getBoundingClientRect();
+            contextMenu.style.top = `${rect.bottom}px`;
+            contextMenu.style.left = `${rect.left}px`;
+        }
+
+        function hideContextMenu() {
+            const contextMenu = document.getElementById('contextMenu');
+            const overlay = document.getElementById('overlay');
+            contextMenu.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        function toggleCheck(childId) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/toggle-check/${childId}`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        function removeUser(childId) {
+            if (confirm('Är du säker på att du vill ta bort denna användare?')) {
+                window.location.href = `/remove-user/${childId}`;
+            }
+        }
+
+        document.getElementById('removeUserButton').onclick = () => removeUser(currentChildId);
+        document.getElementById('overlay').onclick = hideContextMenu;
+
+        // Close context menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const contextMenu = document.getElementById('contextMenu');
+            if (event.target.closest('.context-menu-button') === null && event.target.closest('.context-menu') === null) {
+                hideContextMenu();
+            }
+        });
+
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("children-table");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>
